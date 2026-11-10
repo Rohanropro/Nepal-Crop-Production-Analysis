@@ -1,0 +1,1052 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nepal Crop Production Analytics | Flora</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Load Chart.js only on pages that need charts -->
+<!-- Load Chart.js on all pages that need charts -->
+{% if page in ['dashboard', 'statistics', 'trends', 'comparison', 'regional', 'climate', 'prediction', 'districts'] %}
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endif %}
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <span class="brand-icon">🌱</span>
+
+            <div>
+                <h2>FLORA</h2>
+                <small>Agriculture Analytics</small>
+            </div>
+
+        </div>
+
+        <div class="menu-label">MAIN MENU</div>
+
+        <nav>
+
+            <a href="/"
+               class="{{ 'active' if page == 'dashboard' else '' }}">
+                ▦ Dashboard
+            </a>
+
+            <a href="/regional"
+               class="{{ 'active' if page == 'regional' else '' }}">
+                🌄 Regional Analysis
+            </a>
+
+            <a href="/trends"
+               class="{{ 'active' if page == 'trends' else '' }}">
+                ↗ Crop Trends
+            </a>
+
+            <a href="/comparison"
+               class="{{ 'active' if page == 'comparison' else '' }}">
+                ▥ Crop Comparison
+            </a>
+
+            <a href="/statistics"
+               class="{{ 'active' if page == 'statistics' else '' }}">
+                ◫ Statistics
+            </a>
+           <a href="/climate"
+   class="{{ 'active' if page == 'climate' else '' }}">
+    🌦 Climate Analysis
+</a>
+<a href="/districts"
+   class="{{ 'active' if page == 'districts' else '' }}">
+    📍 District Analysis
+</a>
+<a href="/prediction"
+   class="{{ 'active' if page == 'prediction' else '' }}">
+    🔮 Yield Prediction
+</a>
+<a href="/districts"
+   class="{{ 'active' if page == 'districts' else '' }}">
+    🗺 District Analysis
+</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <strong>NEPAL AGRICULTURE</strong>
+
+            <span>Trends · Analysis · Better Tomorrow</span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    NEPAL CROP PRODUCTION & ENVIRONMENTAL ANALYSIS
+                </h1>
+
+                <p>Trends · Analysis · Better Tomorrow</p>
+
+            </div>
+
+            <div class="live-status">
+
+                <span class="status-dot"></span>
+
+                Live Database
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             1. DASHBOARD PAGE
+        ====================================== -->
+
+        {% if page == 'dashboard' %}
+
+        <section class="welcome">
+
+            <h2>Agricultural Overview</h2>
+
+            <p>
+                Explore crop production, cultivated land
+                and agricultural performance across Nepal.
+            </p>
+
+        </section>
+
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <span>Cumulative Production</span>
+
+                <h2 id="totalProduction">Loading...</h2>
+
+                <small>Tonnes · All recorded years</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Cumulative Cultivated Area</span>
+
+                <h2 id="totalArea">Loading...</h2>
+
+                <small>Hectares · Sum of records</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Total Crops</span>
+
+                <h2 id="totalCrops">Loading...</h2>
+
+                <small>Recorded crop varieties</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Total Districts</span>
+
+                <h2 id="totalDistricts">Loading...</h2>
+
+                <small>Districts with production records</small>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             2. REGIONAL ANALYSIS PAGE
+        ====================================== -->
+
+        {% if page == 'regional' %}
+
+        <section class="welcome">
+
+            <h2>Nepal Regional Agricultural Analysis</h2>
+
+            <p>
+                Explore agricultural production and
+                performance across Himal, Pahad and Tarai.
+            </p>
+
+        </section>
+
+
+        <!-- REGIONAL SUMMARY -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <span>Total Production</span>
+
+                <h2 id="regionalProduction">Loading...</h2>
+
+                <small>Tonnes</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Cultivated Area</span>
+
+                <h2 id="regionalArea">Loading...</h2>
+
+                <small>Hectares</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Total Regions</span>
+
+                <h2 id="regionalCount">Loading...</h2>
+
+                <small>Ecological regions</small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>Total Districts</span>
+
+                <h2 id="regionalDistricts">Loading...</h2>
+
+                <small>Across Nepal</small>
+
+            </div>
+
+        </section>
+
+
+        <!-- REGIONAL CHART -->
+
+        <section class="chart-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>Regional Production Comparison</h2>
+
+                    <p>
+                        Production distribution across Nepal
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="regionalChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- REGIONAL DATA TABLE -->
+
+        <section class="chart-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>Regional Agricultural Statistics</h2>
+
+                    <p>
+                        Detailed comparison of ecological regions
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="regional-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Region</th>
+
+                            <th>Districts</th>
+
+                            <th>Crops</th>
+
+                            <th>Production (Tonnes)</th>
+
+                            <th>Area (Hectares)</th>
+
+                            <th>Yield (kg/ha)</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="regionalTableBody">
+
+                        <tr>
+
+                            <td colspan="6">
+                                Loading regional data...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             3. CROP TRENDS PAGE
+        ====================================== -->
+
+        {% if page == 'trends' %}
+
+        <section class="welcome">
+
+            <h2>Crop Production Trends</h2>
+
+            <p>
+                Explore annual agricultural production in Nepal.
+            </p>
+
+        </section>
+
+
+        <section class="chart-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>Annual Production Trends</h2>
+
+                    <p>Production by selected crop</p>
+
+                </div>
+
+
+                <select id="cropFilter">
+
+                    <option value="">All Crops</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="productionChart"></canvas>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             4. CROP COMPARISON PAGE
+        ====================================== -->
+
+        {% if page == 'comparison' %}
+
+        <section class="welcome">
+
+            <h2>Crop Production Comparison</h2>
+
+            <p>
+                Compare agricultural production across different crops.
+            </p>
+
+        </section>
+
+
+        <section class="chart-card">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>Production by Crop</h2>
+
+                    <p>Compare crop production by selected year</p>
+
+                </div>
+
+
+                <select id="yearFilter">
+
+                    <option value="">All Years</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="cropChart"></canvas>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             5. STATISTICS PAGE
+        ====================================== -->
+
+        {% if page == 'statistics' %}
+
+        
+{% if page == 'statistics' %}
+
+<section class="welcome">
+    <h2>Agricultural Statistics</h2>
+    <p>
+        Detailed statistical overview of Nepal's agricultural
+        production, cultivated land and crop distribution.
+    </p>
+</section>
+
+<!-- STATISTICS SUMMARY -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <span>Cumulative Production</span>
+        <h2 id="totalProduction">Loading...</h2>
+        <small>Tonnes · All recorded years</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Cumulative Cultivated Area</span>
+        <h2 id="totalArea">Loading...</h2>
+        <small>Hectares · All recorded years</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Total Crops</span>
+        <h2 id="totalCrops">Loading...</h2>
+        <small>Recorded crop varieties</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Total Districts</span>
+        <h2 id="totalDistricts">Loading...</h2>
+        <small>Districts with production records</small>
+    </div>
+
+</section>
+
+<!-- ANNUAL PRODUCTION STATISTICS -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Annual Agricultural Production</h2>
+            <p>Combined crop production across recorded years</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="statisticsTrendChart"></canvas>
+    </div>
+
+</section>
+
+<!-- CROP DISTRIBUTION -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Crop Production Distribution</h2>
+            <p>Production comparison across recorded crop varieties</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="statisticsCropChart"></canvas>
+    </div>
+
+</section>
+
+{% endif %}
+
+
+        {% endif %}
+
+<!-- =====================================
+     6. DISTRICT ANALYSIS PAGE
+====================================== -->
+
+{% if page == 'districts' %}
+
+<section class="welcome">
+    <h2>Nepal District Agricultural Analysis</h2>
+    <p>
+        Explore crop production and agricultural
+        performance across Nepal's districts.
+    </p>
+</section>
+
+<!-- FILTERS -->
+
+<section class="chart-card">
+    <div class="section-heading">
+        <div>
+            <h2>Analysis Filters</h2>
+            <p>Select a crop and production year</p>
+        </div>
+
+        <div class="district-filters">
+            <select id="districtCropFilter">
+                <option value="">All Crops</option>
+            </select>
+
+            <select id="districtYearFilter">
+                <option value="">All Years</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<!-- DISTRICT SUMMARY -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <span>Districts Displayed</span>
+        <h2 id="districtCount">Loading...</h2>
+        <small>Districts in Nepal</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Total Production</span>
+        <h2 id="districtProduction">Loading...</h2>
+        <small>Tonnes</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Cultivated Area</span>
+        <h2 id="districtArea">Loading...</h2>
+        <small>Hectares</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Average District Yield</span>
+        <h2 id="districtYield">Loading...</h2>
+        <small>kg per hectare</small>
+    </div>
+
+</section>
+
+<!-- DISTRICT CHART -->
+
+<section class="chart-card">
+    <div class="section-heading">
+        <div>
+            <h2>District Production Ranking</h2>
+            <p>District-wise agricultural production</p>
+        </div>
+    </div>
+
+    <div class="chart-container district-chart">
+        <canvas id="districtChart"></canvas>
+    </div>
+</section>
+
+<!-- DISTRICT TABLE -->
+
+<section class="chart-card">
+    <div class="section-heading">
+        <div>
+            <h2>District Agricultural Records</h2>
+            <p>Detailed district-level production statistics</p>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="regional-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>District</th>
+                    <th>Region</th>
+                    <th>Crops</th>
+                    <th>Production (Tonnes)</th>
+                    <th>Area (Hectares)</th>
+                    <th>Yield (kg/ha)</th>
+                </tr>
+            </thead>
+
+            <tbody id="districtTableBody">
+                <tr>
+                    <td colspan="7">Loading district data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endif %}
+<!-- =====================================
+     YIELD PREDICTION PAGE
+====================================== -->
+
+{% if page == 'prediction' %}
+
+<section class="welcome">
+    <h2>Crop Yield Prediction</h2>
+    <p>
+        Explore historical crop yields and estimate
+        the next year's yield using recorded agricultural data.
+    </p>
+</section>
+
+<section class="chart-card">
+    <div class="section-heading">
+        <div>
+            <h2>Prediction Filters</h2>
+            <p>Select a crop and ecological region</p>
+        </div>
+    </div>
+
+    <div class="prediction-filters">
+        <select id="predictionCrop">
+            <option value="">Select Crop</option>
+        </select>
+
+        <select id="predictionRegion">
+            <option value="">All Regions</option>
+        </select>
+
+        <button id="predictionButton" type="button">
+            Generate Prediction
+        </button>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <div class="stat-card">
+        <span>Predicted Yield</span>
+        <h2 id="predictedYield">--</h2>
+        <small id="predictedYear">Next year</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Latest Recorded Yield</span>
+        <h2 id="latestYield">--</h2>
+        <small>Kg per hectare</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Expected Change</span>
+        <h2 id="yieldChange">--</h2>
+        <small>Compared with latest year</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Historical Trend</span>
+        <h2 id="yieldTrend">--</h2>
+        <small>Based on recorded yields</small>
+    </div>
+</section>
+
+<section class="chart-card">
+    <div class="section-heading">
+        <div>
+            <h2>Historical Yield and Prediction</h2>
+            <p>Yield measured in kilograms per hectare</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="predictionChart"></canvas>
+    </div>
+
+    <p id="predictionMessage" class="prediction-message">
+        Select a crop to generate a prediction.
+    </p>
+</section>
+
+{% endif %}
+<!-- =====================================
+     CLIMATE ANALYSIS PAGE
+====================================== -->
+
+{% if page == 'climate' %}
+
+<section class="welcome">
+
+    <h2>Nepal Climate Analysis</h2>
+
+    <p>
+        Explore annual rainfall and temperature patterns
+        across Nepal's ecological regions.
+    </p>
+
+</section>
+
+
+<!-- CLIMATE SUMMARY -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <span>Climate Records</span>
+        <h2 id="climateRecords">Loading...</h2>
+        <small>Recorded observations</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Average Rainfall</span>
+        <h2 id="climateRainfall">Loading...</h2>
+        <small>Millimetres</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Average Temperature</span>
+        <h2 id="climateTemperature">Loading...</h2>
+        <small>Degrees Celsius</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Districts Covered</span>
+        <h2 id="climateDistricts">Loading...</h2>
+        <small>With climate records</small>
+    </div>
+
+</section>
+
+
+<!-- YEARLY RAINFALL CHART -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Annual Rainfall Trends</h2>
+            <p>Average recorded rainfall by year</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="climateRainfallChart"></canvas>
+    </div>
+
+</section>
+
+
+<!-- YEARLY TEMPERATURE CHART -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Annual Temperature Trends</h2>
+            <p>Average recorded temperature by year</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="climateTemperatureChart"></canvas>
+    </div>
+
+</section>
+
+
+<!-- REGIONAL CLIMATE COMPARISON -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Regional Climate Comparison</h2>
+            <p>Rainfall and temperature across ecological regions</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="climateRegionChart"></canvas>
+    </div>
+
+</section>
+
+
+<!-- REGIONAL CLIMATE TABLE -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Regional Climate Statistics</h2>
+            <p>Detailed climate information by region</p>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table class="regional-table">
+
+            <thead>
+                <tr>
+                    <th>Region</th>
+                    <th>Districts</th>
+                    <th>Records</th>
+                    <th>Average Rainfall (mm)</th>
+                    <th>Average Temperature (°C)</th>
+                </tr>
+            </thead>
+
+            <tbody id="climateTableBody">
+                <tr>
+                    <td colspan="5">Loading climate data...</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endif %}
+<!-- =====================================
+     DISTRICT ANALYSIS PAGE
+====================================== -->
+
+{% if page == 'districts' %}
+
+<section class="welcome">
+
+    <h2>Nepal District Agricultural Analysis</h2>
+
+    <p>
+        Compare crop production, cultivated area and
+        agricultural yield across Nepal's districts.
+    </p>
+
+</section>
+
+
+<!-- FILTERS -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>Analysis Filters</h2>
+            <p>Select a crop and production year</p>
+        </div>
+    </div>
+
+    <div class="district-filters">
+
+        <select id="districtCropFilter">
+            <option value="">All Crops</option>
+        </select>
+
+        <select id="districtYearFilter">
+            <option value="">All Years</option>
+        </select>
+
+        <button id="districtResetButton" type="button">
+            Reset Filters
+        </button>
+
+    </div>
+
+    <p id="districtMessage" class="district-message">
+        Loading district data...
+    </p>
+
+</section>
+
+
+<!-- SUMMARY CARDS -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <span>Districts Found</span>
+        <h2 id="districtCount">Loading...</h2>
+        <small>Matching districts</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Total Production</span>
+        <h2 id="districtProduction">Loading...</h2>
+        <small>Tonnes</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Cultivated Area</span>
+        <h2 id="districtArea">Loading...</h2>
+        <small>Hectares</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Average Yield</span>
+        <h2 id="districtYield">Loading...</h2>
+        <small>kg per hectare</small>
+    </div>
+
+</section>
+
+
+<!-- DISTRICT PRODUCTION CHART -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>District Production Ranking</h2>
+            <p>Top 15 districts by recorded production</p>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="districtChart"></canvas>
+    </div>
+
+</section>
+
+
+<!-- DISTRICT DATA TABLE -->
+
+<section class="chart-card">
+
+    <div class="section-heading">
+        <div>
+            <h2>District Agricultural Statistics</h2>
+            <p>Detailed district-level production records</p>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table class="regional-table">
+
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>District</th>
+                    <th>Region</th>
+                    <th>Crops</th>
+                    <th>Production (Tonnes)</th>
+                    <th>Area (Hectares)</th>
+                    <th>Yield (kg/ha)</th>
+                </tr>
+            </thead>
+
+            <tbody id="districtTableBody">
+                <tr>
+                    <td colspan="7">Loading district data...</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endif %}
+        <!-- =====================================
+             FOOTER
+        ====================================== -->
+
+        <footer>
+
+            Nepal Crop Production Trend Analysis System
+
+            <br>
+
+            Academic Project · Flora
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================
+     JAVASCRIPT INITIALIZATION
+====================================== -->
+
+<script>
+    const currentPage = JSON.parse(`{{ page | tojson }}`);
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+</body>
+</html>
